@@ -8,13 +8,17 @@ namespace Pong
 {
     abstract class Entity
     {
-        public Vector position;
+        public Vector2 position;
         protected Game game;
 
-        public Entity(Game game)
+        public Entity()
+        {
+            this.position = new Vector2(0, 0);
+        }
+
+        public void SetGameInstance(Game game)
         {
             this.game = game;
-            this.position = new Vector(0, 0);
         }
 
         public abstract void Update(double mod);

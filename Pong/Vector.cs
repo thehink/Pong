@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pong
 {
-    class Vector
+    class Vector2
     {
         public double X { get; set; }
         public double Y { get; set; }
@@ -24,15 +24,34 @@ namespace Pong
         }
 
 
-        public Vector(double x, double y)
+        public Vector2(double x, double y)
         {
             this.X = x;
             this.Y = y;
         }
 
-        public Vector Normalize()
+        public Vector2 Copy()
         {
-            return new Vector(0,0);
+            return new Vector2(this.X, this.Y);
+        }
+
+        public Vector2 Add(Vector2 vec)
+        {
+            this.X += vec.X;
+            this.Y += vec.Y;
+            return this;
+        }
+
+        public Vector2 Multiply(double n)
+        {
+            this.X *= n;
+            this.Y *= n;
+            return this;
+        }
+
+        public Vector2 Normalize()
+        {
+            return new Vector2(0,0);
         }
     }
 }

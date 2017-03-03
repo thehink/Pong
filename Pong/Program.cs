@@ -10,11 +10,10 @@ namespace Pong
     {
         static void Main(string[] args)
         {
-            Game game = new Game(70, 40);
+            Game game = new Game(100, 40);
 
-
-            Human player1 = new Human(game, PlayerSide.Left, VirtualKeys.Up, VirtualKeys.Down);
-            Human player2 = new Human(game, PlayerSide.Right, VirtualKeys.A, VirtualKeys.Z);
+            Human player1 = new Human("Player1", VirtualKeys.A, VirtualKeys.Z);
+            Human player2 = new Human("Player2", VirtualKeys.Up, VirtualKeys.Down);
 
             game.NewGame(player1, player2);
 

@@ -23,25 +23,32 @@ namespace Pong
 
         public Game(short width, short height)
         {
+            Console.CursorVisible = false;
+
             this.width = width;
             this.height = height;
-            Console.CursorVisible = false;
             this.cs = new FastConsole(width, height);
-            this.ball = new Ball(this);
+            this.ball = new Ball(2, 1);
             this.Entities = new List<Entity>();
+        }
+
+        public void AddEntity(Entity entity)
+        {
+            entity.SetGameInstance(this);
+            this.Entities.Add(entity);
         }
 
         public void NewGame(Player player1, Player player2)
         {
-            this.Entities.Clear();
             this.Player1 = player1;
             this.Player2 = player2;
             this.Player1.Side = PlayerSide.Left;
             this.Player2.Side = PlayerSide.Right;
 
-            this.Entities.Add(this.Player1);
-            this.Entities.Add(this.Player2);
-            this.Entities.Add(this.ball);
+            this.Entities.Clear();
+            this.AddEntity(this.Player1);
+            this.AddEntity(this.Player2);
+            this.AddEntity(this.ball);
 
             NewRound();
 
@@ -70,7 +77,7 @@ namespace Pong
         {
             ball.Reset();
             Player1.Reset();
-            Player1.Reset();
+            Player2.Reset();
         }
 
         protected void DrawBoard()
@@ -87,6 +94,12 @@ namespace Pong
                 this.cs.WriteChar((char)219, i, 0, ConsoleColor.Blue);
                 this.cs.WriteChar((char)219, i, this.height - 1, ConsoleColor.Blue);
             }
+
+            this.cs.WriteString($"Name: {Player1.Name}", (short)(this.width * 0.15), (short)(this.height * 0.15));
+            this.cs.WriteString($"Score: {Player1.Score}", (short)(this.width * 0.15), (short)(this.height * 0.15 + 1));
+
+            this.cs.WriteString($"Name: {Player2.Name}", (short)(this.width * 0.65), (short)(this.height * 0.15));
+            this.cs.WriteString($"Score: {Player2.Score}", (short)(this.width * 0.65), (short)(this.height * 0.15 + 1));
         }
 
         protected void Logic(double mod)
@@ -118,7 +131,6 @@ namespace Pong
                 this.cs.Draw();
                 Thread.Sleep(1);
             }
-            
         }
     }
 }

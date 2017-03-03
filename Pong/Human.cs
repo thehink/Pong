@@ -12,7 +12,7 @@ namespace Pong
         protected VirtualKeys UpKey;
         protected VirtualKeys DownKey;
 
-        public Human(Game game, PlayerSide side, VirtualKeys UpKey, VirtualKeys DownKey) : base(game, side)
+        public Human(string name, VirtualKeys UpKey, VirtualKeys DownKey) : base(name)
         {
             this.UpKey = UpKey;
             this.DownKey = DownKey;
