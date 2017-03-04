@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pong.NativeConsole;
 
-namespace Pong
+namespace Pong.Game.Entities
 {
     abstract class Entity
     {
         public Vector2 position;
-        protected Game game;
+        protected GameInstance game;
 
         public Entity()
         {
             this.position = new Vector2(0, 0);
         }
 
-        public void SetGameInstance(Game game)
+        public void SetGameInstance(GameInstance game)
         {
             this.game = game;
         }

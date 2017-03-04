@@ -6,9 +6,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pong
+using Pong.NativeConsole;
+using Pong.Game.Entities;
+
+namespace Pong.Game
 {
-    class Game
+    class GameInstance
     {
         protected FastConsole cs;
         public Player Player1;
@@ -21,7 +24,7 @@ namespace Pong
         public short height;
         protected bool running;
 
-        public Game(short width, short height)
+        public GameInstance(short width, short height)
         {
             Console.CursorVisible = false;
 

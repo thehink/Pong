@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pong
+namespace Pong.Game.Entities
 {
     class Ball : Box
     {
@@ -45,6 +45,9 @@ namespace Pong
                     if (this.IsCollisionWith(pl))
                     {
                         this.Direction.X *= -1;
+
+                        //Fix ball getting stuck to a player
+                        this.position.X = pl.Side  == PlayerSide.Left ? pl.position.X + 1 : pl.position.X - 2;
                     }
                 }
             }

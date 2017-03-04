@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pong.NativeConsole;
 
-namespace Pong
+namespace Pong.Game.Entities
 {
     class Human : Player
     {
