@@ -65,8 +65,9 @@ namespace Pong.NativeConsole
           COORD dwBufferCoord,
           ref SMALL_RECT lpWriteRegion);
 
-        
+        [DllImport("Kernel32")]
+        public extern static Boolean CloseHandle(IntPtr handle);
 
-        
+
     }
 }

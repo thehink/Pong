@@ -13,7 +13,7 @@ namespace Pong.Game.Entities
         protected VirtualKeys UpKey;
         protected VirtualKeys DownKey;
 
-        public Human(string name, VirtualKeys UpKey, VirtualKeys DownKey) : base(name)
+        public Human(string name, PlayerSide side, VirtualKeys UpKey, VirtualKeys DownKey) : base(name, side)
         {
             this.UpKey = UpKey;
             this.DownKey = DownKey;

@@ -19,12 +19,12 @@ namespace Pong.Game.Entities
             this.Velocity = 0;
         }
 
-        public void Reset()
+        public void ResetPosition()
         {
             this.position.X = this.game.width / 2;
             this.position.Y = this.game.height / 2;
 
-            this.Velocity = 0.7;
+            this.Velocity = 0.6;
 
             double angle = this.rand.NextDouble() * Math.PI * 2;
 
@@ -34,6 +34,8 @@ namespace Pong.Game.Entities
 
         public override void Update(double mod)
         {
+
+            //this.Velocity += 0.0001 * mod;
 
             this.position.Add(this.Direction.Copy().Multiply(this.Velocity * mod));
 
@@ -48,12 +50,14 @@ namespace Pong.Game.Entities
 
                         //Fix ball getting stuck to a player
                         this.position.X = pl.Side  == PlayerSide.Left ? pl.position.X + 1 : pl.position.X - 2;
+
+                        pl.OnCollide();
+
+                        this.Velocity += 0.05;
                     }
                 }
             }
-            
 
-            //this.Velocity += 0.0001;
 
             if (this.position.X <= 1 || this.position.X >= this.game.width - 3)
             {

@@ -11,12 +11,12 @@ using Pong.Game.Entities;
 
 namespace Pong.Game
 {
-    class GameInstance
+    class GameInstance : IDisposable
     {
         protected FastConsole cs;
         public Player Player1;
         public Player Player2;
-        protected Ball ball;
+        public Ball ball;
 
         public List<Entity> Entities { get; }
 
@@ -26,13 +26,17 @@ namespace Pong.Game
 
         public GameInstance(short width, short height)
         {
-            Console.CursorVisible = false;
-
             this.width = width;
             this.height = height;
             this.cs = new FastConsole(width, height);
+            
             this.ball = new Ball(2, 1);
             this.Entities = new List<Entity>();
+        }
+
+        public void Dispose()
+        {
+            this.cs.Dispose();
         }
 
         public void AddEntity(Entity entity)
@@ -41,20 +45,40 @@ namespace Pong.Game
             this.Entities.Add(entity);
         }
 
-        public void NewGame(Player player1, Player player2)
+        public void ChangeSettings()
         {
-            this.Player1 = player1;
-            this.Player2 = player2;
-            this.Player1.Side = PlayerSide.Left;
-            this.Player2.Side = PlayerSide.Right;
+            this.cs.Clear();
+            this.cs.Draw();
+
+            Console.SetCursorPosition(0, 0);
+
+            Console.CursorVisible = true;
+
+            Console.Write($"Player 1 Name: ");
+            string Player1Name = Console.ReadLine();
+
+            Console.Write($"Player 2 Name: ");
+            string Player2Name = Console.ReadLine();
+            Console.CursorVisible = false;
+
+            this.Player1 = new Human(Player1Name, PlayerSide.Left, VirtualKeys.A, VirtualKeys.Z);
+            this.Player2 = new Human(Player2Name, PlayerSide.Right, VirtualKeys.Up, VirtualKeys.Down);
 
             this.Entities.Clear();
             this.AddEntity(this.Player1);
             this.AddEntity(this.Player2);
             this.AddEntity(this.ball);
 
-            NewRound();
+            this.NewGame();
+        }
 
+        public void NewGame()
+        {
+
+            this.Player1.Reset();
+            this.Player2.Reset();
+
+            NewRound();
             running = true;
             Loop();
         }
@@ -71,16 +95,16 @@ namespace Pong.Game
             }
         }
 
+        public void NewRound()
+        {
+            ball.ResetPosition();
+            Player1.ResetPosition();
+            Player2.ResetPosition();
+        }
+
         public void EndGame()
         {
             running = false;
-        }
-
-        public void NewRound()
-        {
-            ball.Reset();
-            Player1.Reset();
-            Player2.Reset();
         }
 
         protected void DrawBoard()
@@ -105,7 +129,44 @@ namespace Pong.Game
             this.cs.WriteString($"Score: {Player2.Score}", (short)(this.width * 0.65), (short)(this.height * 0.15 + 1));
         }
 
-        protected void Logic(double mod)
+        protected void DrawEndGameScreen()
+        {
+            Player winner = Player1.Score > Player2.Score ? Player1 : Player2;
+            Player looser = Player1.Score > Player2.Score ? Player2 : Player1;
+
+            this.cs.Clear();
+            this.cs.WriteString($"Congratulations {winner.Name}", (short)(this.width * 0.37), (short)(this.height * 0.2));
+            this.cs.WriteString($"{winner.Name}: {winner.Score} points", (short)(this.width * 0.4), (short)(this.height * 0.2 + 2), ConsoleColor.Yellow);
+            this.cs.WriteString($"{looser.Name}: {looser.Score} points", (short)(this.width * 0.4), (short)(this.height * 0.2 + 3), ConsoleColor.Gray);
+
+            this.cs.WriteString($"Press [R] to play again!", (short)(this.width * 0.37), (short)(this.height * 0.2 + 8), ConsoleColor.DarkGreen);
+            this.cs.WriteString($"Press [N] to change settings!", (short)(this.width * 0.37), (short)(this.height * 0.2 + 9), ConsoleColor.DarkGray);
+            this.cs.WriteString($"Press [Q] to quit!", (short)(this.width * 0.37), (short)(this.height * 0.2 + 10), ConsoleColor.DarkRed);
+            this.cs.Draw();
+
+
+            bool invalidKey = true;
+            while (invalidKey)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.R:
+                        this.NewGame();
+                        invalidKey = false;
+                        break;
+                    case ConsoleKey.N:
+                        this.ChangeSettings();
+                        invalidKey = false;
+                        break;
+                    case ConsoleKey.Q:
+                        invalidKey = false;
+                        break;
+                }
+            }
+        }
+
+        protected void Update(double mod)
         {
             for(int i = 0; i < this.Entities.Count; ++i)
             {
@@ -129,11 +190,13 @@ namespace Pong.Game
                 double deltaMod = delta / (1000.0 * 1.0 / 60.0);
                 this.cs.Clear();
                 this.DrawBoard();
-                this.Logic(deltaMod);
+                this.Update(deltaMod);
                 this.cs.WriteString($"FPS: { (1000.0 / delta) }", 1, 39, ConsoleColor.Cyan);
                 this.cs.Draw();
                 Thread.Sleep(1);
             }
+
+            this.DrawEndGameScreen();
         }
     }
 }

@@ -48,10 +48,5 @@ namespace Pong
             this.Y *= n;
             return this;
         }
-
-        public Vector2 Normalize()
-        {
-            return new Vector2(0,0);
-        }
     }
 }

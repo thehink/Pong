@@ -27,18 +27,27 @@ namespace Pong.Game.Entities
         public double MoveSpeed { get; private set; }
         public int Score { get; private set; }
 
+
+        protected double redTime = 0;
         protected bool moveUp = false;
         protected bool moveDown = false;
 
-        public Player(string name) : base(1, 6)
+        public Player(string name, PlayerSide side) : base(1, 6)
         {
             this.Name = name;
+            this.Side = side;
             this.Score = 0;
         }
 
         public void Reset()
         {
-            this.MoveSpeed = 0.3;
+            this.Score = 0;
+            this.ResetPosition();
+        }
+
+        public void ResetPosition()
+        {
+            this.MoveSpeed = 0.6;
             this.position.Y = this.game.height / 2 - this.Height/2;
             if(this.Side == PlayerSide.Right)
             {
@@ -55,8 +64,23 @@ namespace Pong.Game.Entities
             this.Score++;
         }
 
+        public void OnCollide()
+        {
+            this.redTime = 0;
+            this.Color = ConsoleColor.Red;
+        }
+
         public override void Update(double mod)
         {
+
+            if(this.Color == ConsoleColor.Red && this.redTime > 6)
+            {
+                this.Color = ConsoleColor.White;
+            }else
+            {
+                this.redTime += mod;
+            }
+
             if (this.moveUp)
             {
                 this.position.Y -= MoveSpeed * mod;

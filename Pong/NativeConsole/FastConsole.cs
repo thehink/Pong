@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Pong.NativeConsole
 {
 
-    class FastConsole
+    class FastConsole : IDisposable
     {
 
         private SMALL_RECT rect;
@@ -19,6 +19,7 @@ namespace Pong.NativeConsole
         private CharInfo[] buf;
         private IntPtr hStdout;
         private const int STD_OUTPUT_HANDLE = -11;
+        private bool disposed = false;
 
         public FastConsole(short width, short height)
         {
@@ -28,6 +29,42 @@ namespace Pong.NativeConsole
             rect = new SMALL_RECT() { Left = 0, Top = 0, Right = width, Bottom = height };
             Console.SetWindowSize(width, height);
             Console.SetBufferSize(width, height);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            // This object will be cleaned up by the Dispose method.
+            // Therefore, you should call GC.SupressFinalize to
+            // take this object off the finalization queue
+            // and prevent finalization code for this object
+            // from executing a second time.
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called.
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed
+                // and unmanaged resources.
+                if (disposing)
+                {
+                    // Dispose managed resources.
+                }
+
+                // Call the appropriate methods to clean up
+                // unmanaged resources here.
+                // If disposing is false,
+                // only the following code is executed.
+                NativeMethods.CloseHandle(hStdout);
+                hStdout = IntPtr.Zero;
+
+                // Note disposing has been done.
+                disposed = true;
+
+            }
         }
 
         public void SetCursorPosition()
@@ -70,6 +107,14 @@ namespace Pong.NativeConsole
         {
 
             return (NativeMethods.GetAsyncKeyState((ushort)key) & 0x8000 ) > 0;
+        }
+
+        ~FastConsole()
+        {
+            // Do not re-create Dispose clean-up code here.
+            // Calling Dispose(false) is optimal in terms of
+            // readability and maintainability.
+            this.Dispose(false);
         }
     }
 }

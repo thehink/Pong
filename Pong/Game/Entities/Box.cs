@@ -13,12 +13,14 @@ namespace Pong.Game.Entities
         public int Width { get; set; }
         public int Height { get; set; }
         public char Character { get; set; }
+        public ConsoleColor Color { get; set; }
 
         public Box(int width, int height) : base()
         {
             this.Width = width;
             this.Height = height;
             this.Character = (char)219;
+            this.Color = ConsoleColor.White;
         }
 
         public override void Update(double mod)
@@ -40,7 +42,7 @@ namespace Pong.Game.Entities
             {
                 for (int y = 0; y < Height; ++y)
                 {
-                    cs.WriteChar(Character, this.position.RoundedX + x, this.position.RoundedY + y, ConsoleColor.White);
+                    cs.WriteChar(Character, this.position.RoundedX + x, this.position.RoundedY + y, this.Color);
                 }
             }
         }
