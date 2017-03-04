@@ -48,7 +48,7 @@
     <Compile Include="Game\Entities\Entity.cs" />
     <Compile Include="NativeConsole\FastConsole.cs" />
     <Compile Include="NativeConsole\NativeMethods.cs" />
-    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\GameInstance.cs" />
     <Compile Include="Game\Entities\Human.cs" />
     <Compile Include="Game\Entities\Player.cs" />
     <Compile Include="Program.cs" />
