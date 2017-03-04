@@ -48,5 +48,12 @@ namespace Pong
             this.Y *= n;
             return this;
         }
+
+        public Vector2 Set(Vector2 vec)
+        {
+            this.X = vec.X;
+            this.Y = vec.Y;
+            return this;
+        }
     }
 }

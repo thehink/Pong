@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\Entities\Ball.cs" />
+    <Compile Include="Game\Entities\Bot.cs" />
     <Compile Include="Game\Entities\Box.cs" />
     <Compile Include="Game\Entities\Entity.cs" />
     <Compile Include="NativeConsole\FastConsole.cs" />

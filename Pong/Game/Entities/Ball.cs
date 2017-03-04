@@ -21,10 +21,10 @@ namespace Pong.Game.Entities
 
         public void ResetPosition()
         {
-            this.position.X = this.game.width / 2;
-            this.position.Y = this.game.height / 2;
+            this.Position.X = this.game.width / 2;
+            this.Position.Y = this.game.height / 2;
 
-            this.Velocity = 0.6;
+            this.Velocity = 0.9;
 
             double angle = this.rand.NextDouble() * Math.PI * 2;
 
@@ -37,7 +37,7 @@ namespace Pong.Game.Entities
 
             //this.Velocity += 0.0001 * mod;
 
-            this.position.Add(this.Direction.Copy().Multiply(this.Velocity * mod));
+            this.Position.Add(this.Direction.Copy().Multiply(this.Velocity * mod));
 
             for(int i = 0; i < this.game.Entities.Count; ++i)
             {
@@ -49,7 +49,7 @@ namespace Pong.Game.Entities
                         this.Direction.X *= -1;
 
                         //Fix ball getting stuck to a player
-                        this.position.X = pl.Side  == PlayerSide.Left ? pl.position.X + 1 : pl.position.X - 2;
+                        this.Position.X = pl.Side  == PlayerSide.Left ? pl.Position.X + 1 : pl.Position.X - 2;
 
                         pl.OnCollide();
 
@@ -59,35 +59,35 @@ namespace Pong.Game.Entities
             }
 
 
-            if (this.position.X <= 1 || this.position.X >= this.game.width - 3)
+            if (this.Position.X <= 1 || this.Position.X >= this.game.width - 3)
             {
                 //this.Direction.X *= -1;
-                this.game.PlayerScored(this.position.X <= 1 ? this.game.Player2 : this.game.Player1);
+                this.game.PlayerScored(this.Position.X <= 1 ? this.game.Player2 : this.game.Player1);
             }
 
-            if (this.position.Y <= 1 || this.position.Y >= this.game.height - 2)
+            if (this.Position.Y <= 1 || this.Position.Y >= this.game.height - 2)
             {
                 this.Direction.Y *= -1;
             }
 
-            if(this.position.Y < 1)
+            if(this.Position.Y < 1)
             {
-                this.position.Y = 1;
+                this.Position.Y = 1;
             }
 
-            if (this.position.Y > this.game.height - 2)
+            if (this.Position.Y > this.game.height - 2)
             {
-                this.position.Y = this.game.height - 2;
+                this.Position.Y = this.game.height - 2;
             }
 
-            if (this.position.X < 1)
+            if (this.Position.X < 1)
             {
-                //this.position.X = 1;
+                //this.Position.X = 1;
             }
 
-            if (this.position.X > this.game.width - 3)
+            if (this.Position.X > this.game.width - 3)
             {
-                //this.position.X = this.game.width - 3;
+                //this.Position.X = this.game.width - 3;
             }
         }
   

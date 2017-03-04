@@ -9,12 +9,12 @@ namespace Pong.Game.Entities
 {
     abstract class Entity
     {
-        public Vector2 position;
+        public Vector2 Position { get; }
         protected GameInstance game;
 
         public Entity()
         {
-            this.position = new Vector2(0, 0);
+            this.Position = new Vector2(0, 0);
         }
 
         public void SetGameInstance(GameInstance game)

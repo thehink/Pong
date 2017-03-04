@@ -48,14 +48,14 @@ namespace Pong.Game.Entities
         public void ResetPosition()
         {
             this.MoveSpeed = 0.6;
-            this.position.Y = this.game.height / 2 - this.Height/2;
+            this.Position.Y = this.game.height / 2 - this.Height/2;
             if(this.Side == PlayerSide.Right)
             {
-                this.position.X = this.game.width - 2;
+                this.Position.X = this.game.width - 2;
             }
             if (this.Side == PlayerSide.Left)
             {
-                this.position.X = 1;
+                this.Position.X = 1;
             }
         }
 
@@ -83,22 +83,22 @@ namespace Pong.Game.Entities
 
             if (this.moveUp)
             {
-                this.position.Y -= MoveSpeed * mod;
+                this.Position.Y -= MoveSpeed * mod;
             }
 
             if (this.moveDown)
             {
-                this.position.Y += MoveSpeed * mod;
+                this.Position.Y += MoveSpeed * mod;
             }
 
-            if(this.position.Y + this.Height > this.game.height - 1)
+            if(this.Position.Y + this.Height > this.game.height - 1)
             {
-                this.position.Y = this.game.height - this.Height - 1;
+                this.Position.Y = this.game.height - this.Height - 1;
             }
 
-            if (this.position.Y < 1)
+            if (this.Position.Y < 1)
             {
-                this.position.Y = 1;
+                this.Position.Y = 1;
             }
 
         }

@@ -14,9 +14,10 @@ namespace Pong.Game
     class GameInstance : IDisposable
     {
         protected FastConsole cs;
-        public Player Player1;
-        public Player Player2;
-        public Ball ball;
+
+        public Player Player1 { get; private set; }
+        public Player Player2 { get; private set; }
+        public Ball ball { get; }
 
         public List<Entity> Entities { get; }
 
@@ -56,13 +57,33 @@ namespace Pong.Game
 
             Console.Write($"Player 1 Name: ");
             string Player1Name = Console.ReadLine();
+            Console.Write($"Is Player 1 Bot(Y/N)");
+            bool IsPlayer1Bot = Console.ReadLine().ToLower() == "y";
 
             Console.Write($"Player 2 Name: ");
             string Player2Name = Console.ReadLine();
+            Console.Write($"Is Player 2 Bot(Y/N)");
+            bool IsPlayer2Bot = Console.ReadLine() == "y";
+
+
             Console.CursorVisible = false;
 
-            this.Player1 = new Human(Player1Name, PlayerSide.Left, VirtualKeys.A, VirtualKeys.Z);
-            this.Player2 = new Human(Player2Name, PlayerSide.Right, VirtualKeys.Up, VirtualKeys.Down);
+            if (IsPlayer1Bot)
+            {
+                this.Player1 = new Bot($"{Player1Name} (BOT)", PlayerSide.Left);
+            }else
+            {
+                this.Player1 = new Human(Player1Name, PlayerSide.Left, VirtualKeys.A, VirtualKeys.Z);
+            }
+
+            if (IsPlayer2Bot)
+            {
+                this.Player2 = new Bot($"{Player2Name} (BOT)", PlayerSide.Right);
+            }
+            else
+            {
+                this.Player2 = new Human(Player2Name, PlayerSide.Right, VirtualKeys.Up, VirtualKeys.Down);
+            }
 
             this.Entities.Clear();
             this.AddEntity(this.Player1);

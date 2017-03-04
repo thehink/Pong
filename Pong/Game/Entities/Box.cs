@@ -30,10 +30,10 @@ namespace Pong.Game.Entities
 
         public bool IsCollisionWith(Box box)
         {
-            return this.position.X + this.Width > box.position.X &&
-               this.position.Y + this.Height > box.position.Y &&
-               this.position.X < box.position.X + box.Width &&
-               this.position.Y < box.position.Y + box.Height;
+            return this.Position.X + this.Width > box.Position.X &&
+               this.Position.Y + this.Height > box.Position.Y &&
+               this.Position.X < box.Position.X + box.Width &&
+               this.Position.Y < box.Position.Y + box.Height;
         }
 
         public override void Draw(FastConsole cs)
@@ -42,7 +42,7 @@ namespace Pong.Game.Entities
             {
                 for (int y = 0; y < Height; ++y)
                 {
-                    cs.WriteChar(Character, this.position.RoundedX + x, this.position.RoundedY + y, this.Color);
+                    cs.WriteChar(Character, this.Position.RoundedX + x, this.Position.RoundedY + y, this.Color);
                 }
             }
         }
