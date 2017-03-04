@@ -35,8 +35,8 @@ namespace Pong.Game.Entities
 
             Vector2 BallPos = this.game.ball.Position.Copy();
             Vector2 BallDir = this.game.ball.Direction.Copy();
-            //bounce imaginary ball 3 times and see if we can find an intersection
 
+            //bounce imaginary ball 4 times and see if we can find an intersection
             for (int i = 0; i < 4; ++i)
             {
 
