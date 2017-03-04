@@ -126,6 +126,28 @@ namespace Pong.Game
         public void EndGame()
         {
             running = false;
+
+            this.DrawEndGameScreen();
+
+            bool invalidKey = true;
+            while (invalidKey)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.R:
+                        this.NewGame();
+                        invalidKey = false;
+                        break;
+                    case ConsoleKey.N:
+                        this.ChangeSettings();
+                        invalidKey = false;
+                        break;
+                    case ConsoleKey.Q:
+                        invalidKey = false;
+                        break;
+                }
+            }
         }
 
         protected void DrawBoard()
@@ -164,27 +186,6 @@ namespace Pong.Game
             this.cs.WriteString($"Press [N] to change settings!", (short)(this.width * 0.37), (short)(this.height * 0.2 + 9), ConsoleColor.DarkGray);
             this.cs.WriteString($"Press [Q] to quit!", (short)(this.width * 0.37), (short)(this.height * 0.2 + 10), ConsoleColor.DarkRed);
             this.cs.Draw();
-
-
-            bool invalidKey = true;
-            while (invalidKey)
-            {
-                ConsoleKeyInfo key = Console.ReadKey(true);
-                switch (key.Key)
-                {
-                    case ConsoleKey.R:
-                        this.NewGame();
-                        invalidKey = false;
-                        break;
-                    case ConsoleKey.N:
-                        this.ChangeSettings();
-                        invalidKey = false;
-                        break;
-                    case ConsoleKey.Q:
-                        invalidKey = false;
-                        break;
-                }
-            }
         }
 
         protected void Update(double mod)
@@ -215,9 +216,15 @@ namespace Pong.Game
                 this.cs.WriteString($"FPS: { (1000.0 / delta) }", 1, 39, ConsoleColor.Cyan);
                 this.cs.Draw();
                 Thread.Sleep(1);
+                if (FastConsole.IsKeyDown(VirtualKeys.R))
+                {
+                    this.NewRound();
+                }
+                if(FastConsole.IsKeyDown(VirtualKeys.E))
+                {
+                    this.EndGame();
+                }
             }
-
-            this.DrawEndGameScreen();
         }
     }
 }

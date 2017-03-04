@@ -72,6 +72,7 @@ namespace Pong.Game.Entities
 
         public override void Update(double mod)
         {
+            base.Update(mod);
 
             if(this.Color == ConsoleColor.Red && this.redTime > 6)
             {

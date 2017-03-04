@@ -24,17 +24,19 @@ namespace Pong.Game.Entities
             this.Position.X = this.game.width / 2;
             this.Position.Y = this.game.height / 2;
 
-            this.Velocity = 0.9;
+            this.Velocity = 0.8;
 
-            double angle = this.rand.NextDouble() * Math.PI * 2;
+            double angle = -Math.PI/2 + 0.2 * Math.PI + 0.6 * this.rand.NextDouble() * Math.PI;
 
-            this.Direction.X = this.rand.Next(0, 2) == 1 ? 0.5 : -0.5;
-            this.Direction.Y = this.rand.Next(0, 2) == 1 ? 0.5 : -0.5;
+            angle += this.rand.Next(0, 2) == 0 ? Math.PI : 0;
+
+            this.Direction.X = Math.Cos(angle); // this.rand.Next(0, 2) == 1 ? 0.5 : -0.5;
+            this.Direction.Y = Math.Sin(angle); //this.rand.Next(0, 2) == 1 ? 0.5 : -0.5;
         }
 
         public override void Update(double mod)
         {
-
+            base.Update(mod);
             //this.Velocity += 0.0001 * mod;
 
             this.Position.Add(this.Direction.Copy().Multiply(this.Velocity * mod));

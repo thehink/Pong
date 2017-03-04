@@ -14,6 +14,7 @@ namespace Pong
     {
         static void Main(string[] args)
         {
+            Console.Title = "Pong";
             GameInstance game = new GameInstance(100, 40);
             game.ChangeSettings();
         }

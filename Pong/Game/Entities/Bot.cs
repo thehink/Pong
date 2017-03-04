@@ -42,7 +42,11 @@ namespace Pong.Game.Entities
 
                 Vector2 nextBouncePoint = CalcNextBouncePoint(BallPos, BallDir);
 
-                if (nextBouncePoint.X >= x && BallDir.X > 0 || nextBouncePoint.X <= x && BallDir.X < 0)
+                if (
+                    nextBouncePoint.X == double.NegativeInfinity ||
+                    nextBouncePoint.X == double.PositiveInfinity ||
+                    nextBouncePoint.X >= x && BallDir.X > 0 ||
+                    nextBouncePoint.X <= x && BallDir.X < 0)
                 {
                     return FindIntersection(BallPos, BallDir, x);
                 }
@@ -51,7 +55,7 @@ namespace Pong.Game.Entities
                 BallPos.Set(nextBouncePoint);
             }
 
-            return null;
+            return new Vector2(double.MinValue, double.MinValue);
         }
 
         public override void Update(double mod)
