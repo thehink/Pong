@@ -71,7 +71,7 @@ namespace Pong.Game.Entities
         {
             Vector2 next = this.GetNextIntersectionAtX(this.Side == PlayerSide.Left ? 2 : this.game.width - 3, this.Side == PlayerSide.Right ? 2 : this.game.width - 3);
 
-            if(next.Y > 0)
+            if(next.Y > -1)
             {
                 this.moveDown = this.Position.Y + this.Height / 2 - 1 < next.Y;
                 this.moveUp = this.Position.Y + this.Height / 2 - 1 > next.Y;

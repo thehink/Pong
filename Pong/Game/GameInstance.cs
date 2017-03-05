@@ -13,8 +13,10 @@ namespace Pong.Game
 {
     class GameInstance : IDisposable
     {
-        public FastConsole cs;
 
+        protected int ScoreLimit { get; private set; }
+
+        public FastConsole cs { get; }
         public Player Player1 { get; private set; }
         public Player Player2 { get; private set; }
         public Ball ball { get; }
@@ -30,6 +32,8 @@ namespace Pong.Game
             this.width = width;
             this.height = height;
             this.cs = new FastConsole(width, height);
+
+            this.ScoreLimit = 5;
             
             this.ball = new Ball(2, 1);
             this.Entities = new List<Entity>();
@@ -48,29 +52,52 @@ namespace Pong.Game
 
         public void ChangeSettings()
         {
+
+            string Player1Name;
+            string Player2Name;
+            bool IsPlayer1Bot;
+            bool IsPlayer2Bot;
+            int Bot1Difficulty = 0;
+            int Bot2Difficulty = 0;
+
             this.cs.Clear();
             this.cs.Draw();
 
             Console.SetCursorPosition(0, 0);
-
             Console.CursorVisible = true;
 
+            Console.Write($"Score Limit ");
+            this.ScoreLimit = FastConsole.ReadInt(1, 50);
+
             Console.Write($"Player 1 Name: ");
-            string Player1Name = Console.ReadLine();
+            Player1Name = Console.ReadLine();
             Console.Write($"Is Player 1 Bot(Y/N)");
-            bool IsPlayer1Bot = Console.ReadLine().ToLower() == "y";
+            IsPlayer1Bot = Console.ReadLine().ToLower() == "y";
+            
+
+            if (IsPlayer1Bot)
+            {
+                Console.Write($"Difficulty ");
+                Bot1Difficulty = FastConsole.ReadInt(1, 8);
+            }
 
             Console.Write($"Player 2 Name: ");
-            string Player2Name = Console.ReadLine();
+            Player2Name = Console.ReadLine();
             Console.Write($"Is Player 2 Bot(Y/N)");
-            bool IsPlayer2Bot = Console.ReadLine() == "y";
+            IsPlayer2Bot = Console.ReadLine() == "y";
+
+            if (IsPlayer2Bot)
+            {
+                Console.Write($"Difficulty ");
+                Bot2Difficulty = FastConsole.ReadInt(1, 8);
+            }
 
 
             Console.CursorVisible = false;
 
             if (IsPlayer1Bot)
             {
-                this.Player1 = new Bot($"{Player1Name} (BOT)", PlayerSide.Left);
+                this.Player1 = new Bot($"{Player1Name} (BOT)", PlayerSide.Left, Bot1Difficulty);
             }else
             {
                 this.Player1 = new Human(Player1Name, PlayerSide.Left, VirtualKeys.A, VirtualKeys.Z);
@@ -78,7 +105,7 @@ namespace Pong.Game
 
             if (IsPlayer2Bot)
             {
-                this.Player2 = new Bot($"{Player2Name} (BOT)", PlayerSide.Right);
+                this.Player2 = new Bot($"{Player2Name} (BOT)", PlayerSide.Right, Bot2Difficulty);
             }
             else
             {
@@ -107,7 +134,7 @@ namespace Pong.Game
         public void PlayerScored(Player player)
         {
             player.OnScore();
-            if (player.Score == 5)
+            if (player.Score == this.ScoreLimit)
             {
                 this.EndGame();
             }else
@@ -166,10 +193,10 @@ namespace Pong.Game
             }
 
             this.cs.WriteString($"Name: {Player1.Name}", (short)(this.width * 0.15), (short)(this.height * 0.15));
-            this.cs.WriteString($"Score: {Player1.Score}", (short)(this.width * 0.15), (short)(this.height * 0.15 + 1));
+            this.cs.WriteString($"Score: {Player1.Score}/{this.ScoreLimit}", (short)(this.width * 0.15), (short)(this.height * 0.15 + 1));
 
             this.cs.WriteString($"Name: {Player2.Name}", (short)(this.width * 0.65), (short)(this.height * 0.15));
-            this.cs.WriteString($"Score: {Player2.Score}", (short)(this.width * 0.65), (short)(this.height * 0.15 + 1));
+            this.cs.WriteString($"Score: {Player2.Score}/{this.ScoreLimit}", (short)(this.width * 0.65), (short)(this.height * 0.15 + 1));
         }
 
         protected void DrawEndGameScreen()

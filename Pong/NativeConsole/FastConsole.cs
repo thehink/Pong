@@ -103,6 +103,19 @@ namespace Pong.NativeConsole
             NativeMethods.WriteConsoleOutput(hStdout, buf, bufSize, bufCoord, ref rect);
         }
 
+        public static int ReadInt(int min = 0, int max = 0)
+        {
+            int num;
+
+            Console.Write(min != 0 && max != min ? $"{min} - {max}:" : ":");
+
+            while (!int.TryParse(Console.ReadLine(), out num) || num < min || num > max)
+            {
+                Console.Write($"Invalid number! Try again {(min != 0 && max != min ? $"({min} - {max}):" : ":")}");
+            }
+            return num;
+        }
+
         public static bool IsKeyDown(VirtualKeys key)
         {
 
