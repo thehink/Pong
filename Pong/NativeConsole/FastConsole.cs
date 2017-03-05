@@ -72,7 +72,7 @@ namespace Pong.NativeConsole
 
         }
 
-        public void WriteString(string str, short x, short y, ConsoleColor color = ConsoleColor.White)
+        public void WriteString(string str, int x, int y, ConsoleColor color = ConsoleColor.White)
         {
             for (int i = 0; i < str.Length; ++i)
             {

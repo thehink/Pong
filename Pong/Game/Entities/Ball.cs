@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pong.NativeConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace Pong.Game.Entities
 
         protected Random rand = new Random();
 
+        protected double ballCountDownTimer = 3;
+
         public Ball(int width, int height) : base(width, height)
         {
             this.Direction = new Vector2(0, 0);
@@ -21,6 +24,9 @@ namespace Pong.Game.Entities
 
         public void ResetPosition()
         {
+
+            ballCountDownTimer = 2.0;
+
             this.Position.X = this.game.width / 2;
             this.Position.Y = this.game.height / 2;
 
@@ -37,6 +43,13 @@ namespace Pong.Game.Entities
         public override void Update(double mod)
         {
             base.Update(mod);
+
+            if (this.ballCountDownTimer > 0)
+            {
+                this.ballCountDownTimer -= mod / 60;
+                return;
+            }
+
             //this.Velocity += 0.0001 * mod;
 
             this.Position.Add(this.Direction.Copy().Multiply(this.Velocity * mod));
@@ -92,6 +105,37 @@ namespace Pong.Game.Entities
                 //this.Position.X = this.game.width - 3;
             }
         }
-  
+
+        public override void Draw(FastConsole cs)
+        {
+
+            if (this.ballCountDownTimer > 0)
+            {
+                ConsoleColor color;
+
+                int secondsLeft = (int)Math.Round(this.ballCountDownTimer);
+
+                if (secondsLeft >= 3)
+                {
+                    color = ConsoleColor.Magenta;
+                }
+                else if (secondsLeft >= 2)
+                {
+                    color = ConsoleColor.Red;
+                }else if (secondsLeft >= 1)
+                {
+                    color = ConsoleColor.Yellow;
+                }else
+                {
+                    color = ConsoleColor.Green;
+                }
+
+                cs.WriteString(Math.Round(this.ballCountDownTimer).ToString(), this.Position.RoundedX, this.Position.RoundedY, color);
+                return;
+            }
+
+            base.Draw(cs);
+        }
+
     }
 }
