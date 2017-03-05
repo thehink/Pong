@@ -10,10 +10,11 @@ namespace Pong.Game.Entities
     class Bot : Player
     {
 
+        private int ThinkAheadSteps; //number of bounces the bot will think ahead
 
-        public Bot(string name, PlayerSide side) : base(name, side)
+        public Bot(string name, PlayerSide side, int thinkAheadSteps = 8) : base(name, side)
         {
-
+            this.ThinkAheadSteps = thinkAheadSteps;
         }
 
         public Vector2 CalcNextBouncePoint(Vector2 pos, Vector2 dir)
@@ -30,14 +31,13 @@ namespace Pong.Game.Entities
             return new Vector2(pos.X + deltaX, pos.Y + deltaY);
         }
 
-        public Vector2 GetNextIntersectionAtX(double x)
+        public Vector2 GetNextIntersectionAtX(double x, double wallX)
         {
 
             Vector2 BallPos = this.game.ball.Position.Copy();
             Vector2 BallDir = this.game.ball.Direction.Copy();
 
-            //bounce imaginary ball 4 times and see if we can find an intersection
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < ThinkAheadSteps; ++i)
             {
 
                 Vector2 nextBouncePoint = CalcNextBouncePoint(BallPos, BallDir);
@@ -45,13 +45,22 @@ namespace Pong.Game.Entities
                 if (
                     nextBouncePoint.X == double.NegativeInfinity ||
                     nextBouncePoint.X == double.PositiveInfinity ||
-                    nextBouncePoint.X >= x && BallDir.X > 0 ||
-                    nextBouncePoint.X <= x && BallDir.X < 0)
+                    x > wallX && nextBouncePoint.X >= x && BallDir.X > 0 ||
+                    x < wallX && nextBouncePoint.X <= x && BallDir.X < 0)
                 {
                     return FindIntersection(BallPos, BallDir, x);
+                }else if (
+                    x < wallX && nextBouncePoint.X >= wallX && BallDir.X > 0 ||
+                    x > wallX && nextBouncePoint.X <= wallX && BallDir.X < 0)
+                {
+                    nextBouncePoint.Set(FindIntersection(BallPos, BallDir, wallX));
+                    BallDir.X *= -1;
+                }
+                else
+                {
+                    BallDir.Y *= -1;
                 }
 
-                BallDir.Y *= -1;
                 BallPos.Set(nextBouncePoint);
             }
 
@@ -60,10 +69,9 @@ namespace Pong.Game.Entities
 
         public override void Update(double mod)
         {
-            Vector2 next = this.GetNextIntersectionAtX(this.Side == PlayerSide.Left ? 2 : this.game.width - 3);
+            Vector2 next = this.GetNextIntersectionAtX(this.Side == PlayerSide.Left ? 2 : this.game.width - 3, this.Side == PlayerSide.Right ? 2 : this.game.width - 3);
 
-            if(this.Side == PlayerSide.Left && this.game.ball.Direction.X < 0 ||
-               this.Side == PlayerSide.Right && this.game.ball.Direction.X > 0)
+            if(next.Y > 0)
             {
                 this.moveDown = this.Position.Y + this.Height / 2 - 1 < next.Y;
                 this.moveUp = this.Position.Y + this.Height / 2 - 1 > next.Y;
@@ -77,18 +85,18 @@ namespace Pong.Game.Entities
             base.Update(mod);
         }
 
-        /*
+
         public override void Draw(FastConsole cs)
         {
             base.Draw(cs);
 
-            Vector2 next = this.GetNextIntersectionAtX(this.game.width - 3);
-            if(next != null && next.RoundedX > 0 && next.RoundedX < this.game.width &&
+            Vector2 next = this.GetNextIntersectionAtX(this.game.width - 3, 2);
+            if(next.RoundedX > 0 && next.RoundedX < this.game.width &&
                 next.RoundedY > 0 && next.RoundedY < this.game.height)
             {
-                cs.WriteChar('H', next.RoundedX, next.RoundedY, ConsoleColor.Red);
+                //cs.WriteChar('H', next.RoundedX, next.RoundedY, ConsoleColor.Red);
             }
             
-        }*/
+        }
     }
 }

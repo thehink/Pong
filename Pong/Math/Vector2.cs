@@ -30,6 +30,27 @@ namespace Pong
             this.Y = y;
         }
 
+        public static Vector2 operator +(Vector2 c1, Vector2 c2)
+        {
+            return new Vector2(c1.X + c2.X, c1.Y + c2.Y);
+        }
+
+        public static Vector2 operator -(Vector2 c1, Vector2 c2)
+        {
+            return new Vector2(c1.X - c2.X, c1.Y - c2.Y);
+        }
+
+        public static Vector2 operator /(Vector2 c1, double val)
+        {
+            return new Vector2(c1.X / val, c1.Y / val);
+        }
+
+        public static Vector2 operator *(Vector2 c1, double val)
+        {
+            return new Vector2(c1.X * val, c1.Y * val);
+        }
+
+
         public Vector2 Copy()
         {
             return new Vector2(this.X, this.Y);

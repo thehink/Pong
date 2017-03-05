@@ -49,8 +49,6 @@ namespace Pong.Game.Entities
 
             double div = min / max;
 
-
-
             while (min > 0.001 || max > 0.001)
             {
                 //double moveX = (Math.Abs(DeltaX) > 1 ? (DeltaX > 0 ? 1 : -1) : DeltaX);

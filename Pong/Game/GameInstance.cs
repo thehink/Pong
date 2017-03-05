@@ -13,7 +13,7 @@ namespace Pong.Game
 {
     class GameInstance : IDisposable
     {
-        protected FastConsole cs;
+        public FastConsole cs;
 
         public Player Player1 { get; private set; }
         public Player Player2 { get; private set; }
