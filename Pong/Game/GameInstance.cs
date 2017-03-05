@@ -156,6 +156,9 @@ namespace Pong.Game
 
             this.DrawEndGameScreen();
 
+            while (Console.KeyAvailable)
+                Console.ReadKey(true);
+
             bool invalidKey = true;
             while (invalidKey)
             {
@@ -242,15 +245,17 @@ namespace Pong.Game
                 this.Update(deltaMod);
                 this.cs.WriteString($"FPS: { (1000.0 / delta) }", 1, 39, ConsoleColor.Cyan);
                 this.cs.Draw();
-                Thread.Sleep(1);
+
                 if (FastConsole.IsKeyDown(VirtualKeys.R))
                 {
                     this.NewRound();
                 }
-                if(FastConsole.IsKeyDown(VirtualKeys.E))
+                if (FastConsole.IsKeyDown(VirtualKeys.E))
                 {
                     this.EndGame();
                 }
+
+                Thread.Sleep(1);
             }
         }
     }
