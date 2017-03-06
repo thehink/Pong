@@ -12,9 +12,25 @@ namespace Pong.Game.Entities
 
         private int ThinkAheadSteps; //number of bounces the bot will think ahead
 
-        public Bot(string name, PlayerSide side, int thinkAheadSteps = 8) : base(name, side)
+        public Bot(string name, PlayerSide side, int difficulty = 3) : base(name, side)
         {
-            this.ThinkAheadSteps = thinkAheadSteps;
+
+            if(difficulty == 1)
+            {
+                this.MoveSpeed = 0.2;
+                this.ThinkAheadSteps = 2;
+            }
+            else if (difficulty == 2)
+            {
+                this.MoveSpeed = 0.2;
+                this.ThinkAheadSteps = 3;
+            }
+            else if (difficulty == 3)
+            {
+                this.MoveSpeed = 0.8;
+                this.ThinkAheadSteps = 8;
+            }
+            
         }
 
         public Vector2 CalcNextBouncePoint(Vector2 pos, Vector2 dir)

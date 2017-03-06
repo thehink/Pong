@@ -24,7 +24,7 @@ namespace Pong.Game.Entities
         public string Name { get; set; }
         public PlayerType Type { get; }
         public PlayerSide Side { get; set; }
-        public double MoveSpeed { get; private set; }
+        public double MoveSpeed { get; protected set; }
         public int Score { get; private set; }
 
 
@@ -37,6 +37,7 @@ namespace Pong.Game.Entities
             this.Name = name;
             this.Side = side;
             this.Score = 0;
+            this.MoveSpeed = 0.6;
         }
 
         public void Reset()
@@ -47,7 +48,6 @@ namespace Pong.Game.Entities
 
         public void ResetPosition()
         {
-            this.MoveSpeed = 0.6;
             this.Position.Y = this.game.height / 2 - this.Height/2;
             if(this.Side == PlayerSide.Right)
             {

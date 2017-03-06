@@ -78,7 +78,7 @@ namespace Pong.Game
             if (IsPlayer1Bot)
             {
                 Console.Write($"Difficulty ");
-                Bot1Difficulty = FastConsole.ReadInt(1, 8);
+                Bot1Difficulty = FastConsole.ReadInt(1, 3);
             }
 
             Console.Write($"Player 2 Name: ");
@@ -89,7 +89,7 @@ namespace Pong.Game
             if (IsPlayer2Bot)
             {
                 Console.Write($"Difficulty ");
-                Bot2Difficulty = FastConsole.ReadInt(1, 8);
+                Bot2Difficulty = FastConsole.ReadInt(1, 3);
             }
 
 
@@ -243,7 +243,7 @@ namespace Pong.Game
                 this.cs.Clear();
                 this.DrawBoard();
                 this.Update(deltaMod);
-                this.cs.WriteString($"FPS: { (1000.0 / delta) }", 1, 39, ConsoleColor.Cyan);
+                this.cs.WriteString($"FPS: { Math.Round(1000.0 / delta) }", 1, 39, ConsoleColor.Cyan);
                 this.cs.Draw();
 
                 if (FastConsole.IsKeyDown(VirtualKeys.R))
@@ -255,7 +255,10 @@ namespace Pong.Game
                     this.EndGame();
                 }
 
-                Thread.Sleep(1);
+                if (delta < 1000 / 60)
+                {
+                    //Thread.Sleep((int)Math.Ceiling(1000 / 60 - delta));
+                }
             }
         }
     }
