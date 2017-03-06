@@ -27,7 +27,7 @@ namespace Pong.Game.Entities
             }
             else if (difficulty == 3)
             {
-                this.MoveSpeed = 0.8;
+                this.MoveSpeed = 0.6;
                 this.ThinkAheadSteps = 8;
             }
             

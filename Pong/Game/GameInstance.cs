@@ -232,13 +232,21 @@ namespace Pong.Game
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            double lastTime = stopwatch.ElapsedMilliseconds;
+            double lastUpdate = stopwatch.ElapsedMilliseconds;
             double delta = 0;
+
+            int MAX_UPDATES_PER_SECOND = 120;
+            int MIN_WAIT_TICKS = 1000 / MAX_UPDATES_PER_SECOND;
 
             while (running)
             {
-                delta = stopwatch.ElapsedMilliseconds - lastTime;
-                lastTime = stopwatch.ElapsedMilliseconds;
+                while (stopwatch.ElapsedMilliseconds < lastUpdate + MIN_WAIT_TICKS)
+                {
+                    Thread.Sleep(0);
+                }
+
+                delta = stopwatch.ElapsedMilliseconds - lastUpdate;
+                lastUpdate = stopwatch.ElapsedMilliseconds;
                 double deltaMod = delta / (1000.0 * 1.0 / 60.0);
                 this.cs.Clear();
                 this.DrawBoard();
@@ -253,11 +261,6 @@ namespace Pong.Game
                 if (FastConsole.IsKeyDown(VirtualKeys.E))
                 {
                     this.EndGame();
-                }
-
-                if (delta < 1000 / 60)
-                {
-                    //Thread.Sleep((int)Math.Ceiling(1000 / 60 - delta));
                 }
             }
         }

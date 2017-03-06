@@ -27,7 +27,6 @@ namespace Pong.Game.Entities
         public double MoveSpeed { get; protected set; }
         public int Score { get; private set; }
 
-
         protected double redTime = 0;
         protected bool moveUp = false;
         protected bool moveDown = false;
