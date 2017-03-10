@@ -20,6 +20,7 @@ namespace Pong.Game.Entities
         {
             this.Direction = new Vector2(0, 0);
             this.Velocity = 0;
+            this.Color = ConsoleColor.Gray;
         }
 
         public void ResetPosition()
@@ -27,10 +28,10 @@ namespace Pong.Game.Entities
 
             ballCountDownTimer = 2.0;
 
-            this.Position.X = this.game.width / 2;
-            this.Position.Y = this.game.height / 2;
+            this.Position.X = this.game.Width / 2;
+            this.Position.Y = this.game.Height / 2;
 
-            this.Velocity = 0.8;
+            this.Velocity = 1.9;
 
             double angle = -Math.PI/2 + 0.2 * Math.PI + 0.6 * this.rand.NextDouble() * Math.PI;
 
@@ -61,8 +62,11 @@ namespace Pong.Game.Entities
                     Player pl = (Player)this.game.Entities[i];
                     if (this.IsCollisionWith(pl))
                     {
-                        this.Direction.X *= -1;
 
+                        //Fix bug with calculation
+                        this.Position.Y -= this.Direction.Y * (pl.Side == PlayerSide.Left ? this.Position.X - 1 : this.Position.X - this.game.Width + 2) / this.Direction.X;
+
+                        this.Direction.X *= -1;
                         //Fix ball getting stuck to a player
                         this.Position.X = pl.Side  == PlayerSide.Left ? pl.Position.X + 1 : pl.Position.X - 2;
 
@@ -74,35 +78,36 @@ namespace Pong.Game.Entities
             }
 
 
-            if (this.Position.X <= 1 || this.Position.X >= this.game.width - 3)
+            if (this.Position.X <= 0 || this.Position.X >= this.game.Width - 1)
             {
-                //this.Direction.X *= -1;
-                this.game.PlayerScored(this.Position.X <= 1 ? this.game.Player2 : this.game.Player1);
+                this.game.PlayerScored(this.Position.X <= 0 ? this.game.Player2 : this.game.Player1);
             }
 
-            if (this.Position.Y <= 1 || this.Position.Y >= this.game.height - 2)
+            if (this.Position.Y <= 0 || this.Position.Y >= this.game.Height)
             {
                 this.Direction.Y *= -1;
             }
 
-            if(this.Position.Y < 1)
+            if(this.Position.Y < 0)
             {
-                this.Position.Y = 1;
+                this.Position.X += this.Direction.X * this.Position.Y / this.Direction.Y;
+                this.Position.Y = 0;
             }
 
-            if (this.Position.Y > this.game.height - 2)
+            if (this.Position.Y > this.game.Height)
             {
-                this.Position.Y = this.game.height - 2;
+                this.Position.X += this.Direction.X * (this.Position.Y - this.game.Height) / this.Direction.Y;
+                this.Position.Y = this.game.Height;
             }
 
-            if (this.Position.X < 1)
+            if (this.Position.X < 0)
             {
-                //this.Position.X = 1;
+                this.Position.X = 0;
             }
 
-            if (this.Position.X > this.game.width - 3)
+            if (this.Position.X > this.game.Width)
             {
-                //this.Position.X = this.game.width - 3;
+                this.Position.X = this.game.Width;
             }
         }
 
@@ -130,7 +135,7 @@ namespace Pong.Game.Entities
                     color = ConsoleColor.Green;
                 }
 
-                cs.WriteString(Math.Round(this.ballCountDownTimer).ToString(), this.Position.RoundedX, this.Position.RoundedY, color);
+                this.game.WriteString(Math.Round(this.ballCountDownTimer).ToString(), this.Position.RoundedX, this.Position.RoundedY, color);
                 return;
             }
 

@@ -30,6 +30,16 @@ namespace Pong.Game.Entities
             this.lastPosition = this.Position.Copy();
         }
 
+        public bool IsCollisionWith2(Box box)
+        {
+            double DeltaX = this.Position.X - this.lastPosition.X;
+            double DeltaY = this.Position.Y - this.lastPosition.Y;
+
+
+
+            return false;
+        }
+
         public bool IsCollisionWith(Box box)
         {
             /*return this.Position.X + this.Width > box.Position.X &&
@@ -84,7 +94,7 @@ namespace Pong.Game.Entities
             {
                 for (int y = 0; y < Height; ++y)
                 {
-                    cs.WriteChar(Character, this.Position.RoundedX + x, this.Position.RoundedY + y, this.Color);
+                    this.game.WriteChar(Character, this.Position.RoundedX + x, this.Position.RoundedY + y, this.Color);
                 }
             }
 

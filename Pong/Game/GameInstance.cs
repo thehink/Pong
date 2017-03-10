@@ -22,16 +22,28 @@ namespace Pong.Game
         public Ball ball { get; }
 
         public List<Entity> Entities { get; }
+        public int Width { get; }
+        public int Height { get; }
+        public int ScreenWidth { get; }
+        public int ScreenHeight { get; }
 
-        public short width;
-        public short height;
+        public bool IsDebug { get; } = false;
+
+        protected short width;
+        protected short height;
         protected bool running;
 
-        public GameInstance(short width, short height)
+        public GameInstance(int width, int height)
         {
-            this.width = width;
-            this.height = height;
-            this.cs = new FastConsole(width, height);
+            this.ScreenWidth = width;
+            this.ScreenHeight = height;
+
+            this.Width = width - 3;
+            this.Height = height - 3;
+
+            this.width = (short)width;
+            this.height = (short)height;
+            this.cs = new FastConsole((short)(this.ScreenWidth), (short)(this.ScreenHeight));
 
             this.ScoreLimit = 5;
             
@@ -134,6 +146,7 @@ namespace Pong.Game
         public void PlayerScored(Player player)
         {
             player.OnScore();
+            Thread.Sleep(1000);
             if (player.Score == this.ScoreLimit)
             {
                 this.EndGame();
@@ -183,16 +196,16 @@ namespace Pong.Game
         protected void DrawBoard()
         {
 
-            for (int i = 0; i < this.height; ++i)
+            for (int i = 0; i < this.ScreenHeight; ++i)
             {
                 this.cs.WriteChar((char)219, 0, i, ConsoleColor.DarkGreen);
-                this.cs.WriteChar((char)219, this.width - 1, i, ConsoleColor.DarkGreen);
+                this.cs.WriteChar((char)219, this.ScreenWidth - 1, i, ConsoleColor.DarkGreen);
             }
 
-            for (int i = 0; i < this.width; ++i)
+            for (int i = 0; i < this.ScreenWidth; ++i)
             {
                 this.cs.WriteChar((char)219, i, 0, ConsoleColor.Blue);
-                this.cs.WriteChar((char)219, i, this.height - 1, ConsoleColor.Blue);
+                this.cs.WriteChar((char)219, i, this.ScreenHeight - 1, ConsoleColor.Blue);
             }
 
             this.cs.WriteString($"Name: {Player1.Name}", (short)(this.width * 0.15), (short)(this.height * 0.15));
@@ -218,9 +231,33 @@ namespace Pong.Game
             this.cs.Draw();
         }
 
+        public void WriteChar(char chr, int x, int y, ConsoleColor color = ConsoleColor.White)
+        {
+            if(x >= 0 && x <= this.Width && y >= 0 && y <= this.Height)
+            {
+                this.cs.WriteChar(chr, x + 1, y + 1, color);
+            }
+        }
+
+        public void WriteString(string str, int x, int y, ConsoleColor color = ConsoleColor.White)
+        {
+            if (x >= 0 && x <= this.Width && y >= 0 && y <= this.Height)
+            {
+                this.cs.WriteString(str, x + 1, y + 1, color);
+            }
+        }
+
+        public void WriteDebug(string str, int x, int y, ConsoleColor color = ConsoleColor.White)
+        {
+            if (this.IsDebug)
+            {
+                this.WriteString(str, x, y, color);
+            }
+        }
+
         protected void Update(double mod)
         {
-            for(int i = 0; i < this.Entities.Count; ++i)
+            for (int i = 0; i < this.Entities.Count; ++i)
             {
                 this.Entities[i].Update(mod);
                 this.Entities[i].Draw(this.cs);
@@ -232,7 +269,7 @@ namespace Pong.Game
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            double lastUpdate = stopwatch.ElapsedMilliseconds;
+            long lastUpdate = stopwatch.ElapsedMilliseconds;
             double delta = 0;
 
             int MAX_UPDATES_PER_SECOND = 120;
@@ -251,7 +288,8 @@ namespace Pong.Game
                 this.cs.Clear();
                 this.DrawBoard();
                 this.Update(deltaMod);
-                this.cs.WriteString($"FPS: { Math.Round(1000.0 / delta) }", 1, 39, ConsoleColor.Cyan);
+                this.cs.WriteString($"FPS: { Math.Round(1000.0 / delta, 2) }", 1, this.height - 1, ConsoleColor.Cyan);
+                //this.WriteChar('A', this.Width, this.Height);
                 this.cs.Draw();
 
                 if (FastConsole.IsKeyDown(VirtualKeys.R))

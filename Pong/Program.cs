@@ -15,7 +15,9 @@ namespace Pong
         static void Main(string[] args)
         {
             Console.Title = "Pong";
-            GameInstance game = new GameInstance(120, 40);
+            
+            GameInstance game = new GameInstance((int)(Console.LargestWindowWidth/1.5), (int)(Console.LargestWindowHeight/1.5));
+            Console.SetWindowPosition(0, 0);
             game.ChangeSettings();
         }
     }

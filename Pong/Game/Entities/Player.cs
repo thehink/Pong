@@ -31,7 +31,7 @@ namespace Pong.Game.Entities
         protected bool moveUp = false;
         protected bool moveDown = false;
 
-        public Player(string name, PlayerSide side) : base(1, 6)
+        public Player(string name, PlayerSide side) : base(1, 7)
         {
             this.Name = name;
             this.Side = side;
@@ -47,14 +47,14 @@ namespace Pong.Game.Entities
 
         public void ResetPosition()
         {
-            this.Position.Y = this.game.height / 2 - this.Height/2;
+            this.Position.Y = this.game.Height / 2 - this.Height/2;
             if(this.Side == PlayerSide.Right)
             {
-                this.Position.X = this.game.width - 2;
+                this.Position.X = this.game.Width;
             }
             if (this.Side == PlayerSide.Left)
             {
-                this.Position.X = 1;
+                this.Position.X = 0;
             }
         }
 
@@ -91,14 +91,14 @@ namespace Pong.Game.Entities
                 this.Position.Y += MoveSpeed * mod;
             }
 
-            if(this.Position.Y + this.Height > this.game.height - 1)
+            if(this.Position.Y + this.Height > this.game.Height + 1)
             {
-                this.Position.Y = this.game.height - this.Height - 1;
+                this.Position.Y = this.game.Height - this.Height + 1;
             }
 
-            if (this.Position.Y < 1)
+            if (this.Position.Y < 0)
             {
-                this.Position.Y = 1;
+                this.Position.Y = 0;
             }
 
         }

@@ -28,14 +28,14 @@ namespace Pong.Game.Entities
             else if (difficulty == 3)
             {
                 this.MoveSpeed = 0.6;
-                this.ThinkAheadSteps = 8;
+                this.ThinkAheadSteps = 10;
             }
             
         }
 
         public Vector2 CalcNextBouncePoint(Vector2 pos, Vector2 dir)
         {
-            double deltaY = dir.Y > 0 ? this.game.height - 2 - pos.Y : -pos.Y + 1;
+            double deltaY = dir.Y > 0 ? this.game.Height - pos.Y : -pos.Y;
             double deltaX = dir.X * deltaY / dir.Y;
             return new Vector2(pos.X + deltaX, pos.Y + deltaY);
         }
@@ -61,13 +61,17 @@ namespace Pong.Game.Entities
                 if (
                     nextBouncePoint.X == double.NegativeInfinity ||
                     nextBouncePoint.X == double.PositiveInfinity ||
-                    x > wallX && nextBouncePoint.X >= x && BallDir.X > 0 ||
-                    x < wallX && nextBouncePoint.X <= x && BallDir.X < 0)
+                    x >= wallX && nextBouncePoint.X >= x && BallDir.X > 0 ||
+                    x <= wallX && nextBouncePoint.X <= x && BallDir.X < 0)
                 {
-                    return FindIntersection(BallPos, BallDir, x);
+
+                    Vector2 inter = FindIntersection(BallPos, BallDir, x);
+
+                    this.game.WriteDebug($"F {Math.Round(inter.X, 2)} {Math.Round(inter.Y, 2)}", inter.RoundedX, inter.RoundedY, ConsoleColor.Red);
+                    return inter;
                 }else if (
-                    x < wallX && nextBouncePoint.X >= wallX && BallDir.X > 0 ||
-                    x > wallX && nextBouncePoint.X <= wallX && BallDir.X < 0)
+                    x <= wallX && nextBouncePoint.X >= wallX && BallDir.X > 0 ||
+                    x >= wallX && nextBouncePoint.X <= wallX && BallDir.X < 0)
                 {
                     nextBouncePoint.Set(FindIntersection(BallPos, BallDir, wallX));
                     BallDir.X *= -1;
@@ -77,6 +81,8 @@ namespace Pong.Game.Entities
                     BallDir.Y *= -1;
                 }
 
+                this.game.WriteDebug($"H {Math.Round(nextBouncePoint.X, 2)} {Math.Round(nextBouncePoint.Y, 2)}", nextBouncePoint.RoundedX, nextBouncePoint.RoundedY, ConsoleColor.Red);
+
                 BallPos.Set(nextBouncePoint);
             }
 
@@ -85,17 +91,17 @@ namespace Pong.Game.Entities
 
         public override void Update(double mod)
         {
-            Vector2 next = this.GetNextIntersectionAtX(this.Side == PlayerSide.Left ? 2 : this.game.width - 3, this.Side == PlayerSide.Right ? 2 : this.game.width - 3);
+            Vector2 next = this.GetNextIntersectionAtX(this.Side == PlayerSide.Left ? 1 : this.game.Width - 2, this.Side == PlayerSide.Right ? 1 : this.game.Width - 2);
 
             if(next.Y > -1)
             {
-                this.moveDown = this.Position.Y + this.Height / 2 - 1 < next.Y;
-                this.moveUp = this.Position.Y + this.Height / 2 - 1 > next.Y;
+                this.moveDown = this.Position.Y + this.Height / 2 < Math.Round(next.Y);
+                this.moveUp = this.Position.Y + this.Height / 2 > Math.Round(next.Y);
             }
             else
             {
-                this.moveDown = this.Position.Y + this.Height / 2 < this.game.height / 2;
-                this.moveUp = this.Position.Y + this.Height / 2 > this.game.height / 2;
+                this.moveDown = this.Position.Y + this.Height / 2 < this.game.Height / 2;
+                this.moveUp = this.Position.Y + this.Height / 2 > this.game.Height / 2;
             }
 
             base.Update(mod);
@@ -106,13 +112,9 @@ namespace Pong.Game.Entities
         {
             base.Draw(cs);
 
-            Vector2 next = this.GetNextIntersectionAtX(this.game.width - 3, 2);
-            if(next.RoundedX > 0 && next.RoundedX < this.game.width &&
-                next.RoundedY > 0 && next.RoundedY < this.game.height)
-            {
-                //cs.WriteChar('H', next.RoundedX, next.RoundedY, ConsoleColor.Red);
-            }
-            
+            //Vector2 next = this.GetNextIntersectionAtX(this.game.Width, 0);
+            //this.game.WriteChar('H', next.RoundedX, next.RoundedY, ConsoleColor.Red);
+
         }
     }
 }
